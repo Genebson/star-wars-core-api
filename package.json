@@ -22,8 +22,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "npm run typeorm -- migration:generate -d src/config/database.config.ts src/migrations/%npm_config_name%",
-    "migration:run": "node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d dist/src/config/db.config.js",
-    "migration:revert": "node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d dist/src/config/db.config.js"
+    "migration:run": "node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d dist/src/config/database.config.js",
+    "migration:revert": "node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d dist/src/config/database.config.js"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",
