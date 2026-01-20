@@ -1,0 +1,45 @@
+name: Star Wars API Workflow
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['*']
+
+env:
+  PORT: 3000
+  NODE_ENV: development
+  DB_HOST: localhost
+  DB_PORT: 5432
+  DB_USERNAME: postgres
+  DB_PASSWORD: example
+  DB_NAME: sw_api
+  JWT_SECRET: super-secret
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run Tests
+        run: npm run test
+
+      - uses: hrishikesh-kadam/setup-lcov@v1
+
+      - uses: kefasjw/lcov-pull-request-report@v1
+        with:
+          lcov-file: coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          changed-files-minimum-coverage: 85
+          all-files-minimum-coverage: 85

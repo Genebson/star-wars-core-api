@@ -1,0 +1,8 @@
+entity: movie
+items:
+  movie1:
+    id: 1
+    title: 'Star Wars Episode I'
+    director: 'George Lucas'
+    openingCrawl: 'As the war started to end...'
+    releaseDate: '1999-02-14 21:00:00'
