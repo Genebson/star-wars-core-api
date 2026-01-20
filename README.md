@@ -1,5 +1,7 @@
 # Star Wars Core API
 
+- Available at https://star-wars-core-api.onrender.com/api
+
 ## Prerequisites
 
 - Node >= @18.12.0.
