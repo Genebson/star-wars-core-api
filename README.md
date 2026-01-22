@@ -26,6 +26,7 @@
 | `DB_PASSWORD` | Postgres database password. Use 'example' for local                                                   |
 | `DB_NAME`     | Postgres database name. Use 'sw_api' for local                                                        |
 | `JWT_SECRET`  | JWT secret to sign and check tokens. Can be any string or Buffer                                      |
+| `STAR_WARS_API`  | Star Wars API base URL. Use https://swapi.dev/api for local or default                             |
 
 ## Run
 
