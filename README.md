@@ -41,7 +41,7 @@
 npm run test
 # Runs all tests once.
 
-npm run test
+npm run test:watch
 # Runs all tests in watch mode.
 
 npm run test:cov
