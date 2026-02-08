@@ -59,9 +59,9 @@ describe('AuthController', () => {
       return request(app.getHttpServer())
         .post('/auth/register')
         .send(registerUserDto)
-        .expect(HttpStatus.BAD_REQUEST)
+        .expect(HttpStatus.CONFLICT)
         .then(({ body }) => {
-          expect(body.message).toEqual('The given email is already in use');
+          expect(body.error).toEqual('The given email is already in use');
         });
     });
   });
@@ -105,9 +105,9 @@ describe('AuthController', () => {
       return request(app.getHttpServer())
         .post('/auth/login')
         .send(loginUserDto)
-        .expect(HttpStatus.BAD_REQUEST)
+        .expect(HttpStatus.UNAUTHORIZED)
         .then(({ body }) => {
-          expect(body.message).toEqual('The given credentials are invalid');
+          expect(body.error).toEqual('The given credentials are invalid');
         });
     });
 
@@ -122,9 +122,9 @@ describe('AuthController', () => {
       return request(app.getHttpServer())
         .post('/auth/login')
         .send(loginUserDto)
-        .expect(HttpStatus.BAD_REQUEST)
+        .expect(HttpStatus.UNAUTHORIZED)
         .then(({ body }) => {
-          expect(body.message).toEqual('The given credentials are invalid');
+          expect(body.error).toEqual('The given credentials are invalid');
         });
     });
   });
