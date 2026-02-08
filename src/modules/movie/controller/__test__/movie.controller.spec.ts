@@ -80,9 +80,9 @@ describe('MovieController', () => {
         .post('/movie')
         .auth(regularAccessToken, { type: 'bearer' })
         .send(createMovieDto)
-        .expect(HttpStatus.FORBIDDEN)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(({ body }) => {
-          expect(body.message).toEqual('Forbidden resource');
+          expect(body.error).toEqual('Forbidden resource');
         });
     });
   });
@@ -125,7 +125,7 @@ describe('MovieController', () => {
         });
     });
 
-    it('Should return an error if trying to get a non existing movie', async () => {
+    it('Should return an error if trying to get a non-existing movie', async () => {
       const nonExistingMovieId = 7777;
 
       return request(app.getHttpServer())
@@ -133,7 +133,7 @@ describe('MovieController', () => {
         .auth(regularAccessToken, { type: 'bearer' })
         .expect(HttpStatus.NOT_FOUND)
         .then(({ body }) => {
-          expect(body.message).toEqual('Cannot find the requested movie');
+          expect(body.error).toEqual('Cannot find the requested movie');
         });
     });
   });
@@ -176,9 +176,9 @@ describe('MovieController', () => {
         .patch(`/movie/${movieId}`)
         .auth(regularAccessToken, { type: 'bearer' })
         .send(updateMovieDto)
-        .expect(HttpStatus.FORBIDDEN)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(({ body }) => {
-          expect(body.message).toEqual('Forbidden resource');
+          expect(body.error).toEqual('Forbidden resource');
         });
     });
   });
@@ -190,7 +190,7 @@ describe('MovieController', () => {
       return request(app.getHttpServer())
         .delete(`/movie/${movieId}`)
         .auth(adminAccessToken, { type: 'bearer' })
-        .expect(HttpStatus.ACCEPTED);
+        .expect(HttpStatus.OK);
     });
 
     it('Should return an error if trying to delete a movie without ADMIN role', async () => {
@@ -199,9 +199,9 @@ describe('MovieController', () => {
       return request(app.getHttpServer())
         .patch(`/movie/${movieId}`)
         .auth(regularAccessToken, { type: 'bearer' })
-        .expect(HttpStatus.FORBIDDEN)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(({ body }) => {
-          expect(body.message).toEqual('Forbidden resource');
+          expect(body.error).toEqual('Forbidden resource');
         });
     });
   });

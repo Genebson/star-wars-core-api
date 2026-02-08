@@ -6,8 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  HttpCode,
   UseGuards,
+  UseFilters,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { MovieService } from '../service/movie.service';
@@ -17,19 +17,21 @@ import { MovieEntity } from '../repository/movie.entity';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from '../../common/controller/roles/roles.guard';
 import { RolesType } from '../../common/controller/roles/enum/roles.enum';
+import { MovieErrorFilter } from '../service/movie-error-filter.interceptor';
 
 @ApiTags('Movies')
 @Controller('movie')
 @ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'))
+@UseFilters(MovieErrorFilter)
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
   @Post()
   @UseGuards(RolesGuard([RolesType.ADMIN]))
   @ApiBody({ type: CreateMovieDto })
-  async create(@Body() createMovieDto: CreateMovieDto): Promise<MovieEntity> {
-    return await this.movieService.create(createMovieDto);
+  async create(@Body() movie: CreateMovieDto): Promise<MovieEntity> {
+    return await this.movieService.create(movie);
   }
 
   @Get()
@@ -47,21 +49,20 @@ export class MovieController {
   @ApiBody({ type: UpdateMovieDto })
   async updateById(
     @Param('id') id: string,
-    @Body() updateMovieDto: UpdateMovieDto,
+    @Body() movie: UpdateMovieDto,
   ): Promise<MovieEntity> {
-    return await this.movieService.updateById(+id, updateMovieDto);
+    return await this.movieService.updateById(+id, movie);
   }
 
   @Delete(':id')
-  @HttpCode(202)
   @UseGuards(RolesGuard([RolesType.ADMIN]))
   async deleteById(@Param('id') id: string): Promise<void> {
     return await this.movieService.deleteById(+id);
   }
 
   @Post('sync')
-  // @UseGuards(RolesGuard([RolesType.ADMIN]))
-  async syncMovies(): Promise<any> {
+  @UseGuards(RolesGuard([RolesType.ADMIN]))
+  async syncMovies(): Promise<void> {
     return await this.movieService.syncMovies();
   }
 }

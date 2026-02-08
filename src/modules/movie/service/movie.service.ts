@@ -12,8 +12,8 @@ export class MovieService {
     private readonly movieRepository: IMovieRepository,
   ) {}
 
-  async create(createMovieDto: CreateMovieDto): Promise<MovieEntity> {
-    const { title, director, openingCrawl, releaseDate } = createMovieDto;
+  async create(movie: CreateMovieDto): Promise<MovieEntity> {
+    const { title, director, openingCrawl, releaseDate } = movie;
 
     return this.movieRepository.create({
       title,
@@ -37,13 +37,10 @@ export class MovieService {
     return movie;
   }
 
-  async updateById(
-    id: number,
-    updateMovieDto: UpdateMovieDto,
-  ): Promise<MovieEntity> {
+  async updateById(id: number, movie: UpdateMovieDto): Promise<MovieEntity> {
     await this.findByIdOrThrow(id);
 
-    const { title, director, openingCrawl, releaseDate } = updateMovieDto;
+    const { title, director, openingCrawl, releaseDate } = movie;
 
     return this.movieRepository.updateById(id, {
       title,
@@ -58,7 +55,7 @@ export class MovieService {
     return this.movieRepository.deleteById(id);
   }
 
-  async syncMovies(): Promise<any> {
+  async syncMovies(): Promise<void> {
     return this.movieRepository.syncMovies();
   }
 }
