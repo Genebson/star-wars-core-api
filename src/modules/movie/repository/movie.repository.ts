@@ -30,23 +30,20 @@ export class MovieRepository implements IMovieRepository {
     });
   }
 
-  async create(movieData: ICreateMovieInput): Promise<MovieEntity> {
-    const { title, director, releaseDate, openingCrawl } = movieData;
+  async create(movie: ICreateMovieInput): Promise<MovieEntity> {
+    const { title, director, releaseDate, openingCrawl } = movie;
 
-    const movieToSave = new MovieEntity();
-    movieToSave.title = title;
-    movieToSave.director = director;
-    movieToSave.releaseDate = releaseDate;
-    movieToSave.openingCrawl = openingCrawl;
+    const newMovie = new MovieEntity();
+    newMovie.title = title;
+    newMovie.director = director;
+    newMovie.releaseDate = releaseDate;
+    newMovie.openingCrawl = openingCrawl;
 
-    return this.movieRepository.save(movieToSave);
+    return this.movieRepository.save(newMovie);
   }
 
-  async updateById(
-    id: number,
-    movieData: IUpdateMovieInput,
-  ): Promise<MovieEntity> {
-    await this.movieRepository.update(id, movieData);
+  async updateById(id: number, movie: IUpdateMovieInput): Promise<MovieEntity> {
+    await this.movieRepository.update(id, movie);
     return this.findById(id);
   }
 
@@ -54,17 +51,14 @@ export class MovieRepository implements IMovieRepository {
     await this.movieRepository.delete(id);
   }
 
-  async syncMovies(): Promise<any> {
+  async syncMovies(): Promise<void> {
     const starWarsApi = `${process.env.STAR_WARS_API}/films`;
-
-    console.log(`Star Wars API: ${starWarsApi}`);
 
     const fetch = this.httpService.get(starWarsApi);
 
     const {
       data: { result: films },
     } = await lastValueFrom(fetch);
-
 
     for (const film of films) {
       const { title, release_date, director, opening_crawl } = film.properties;
