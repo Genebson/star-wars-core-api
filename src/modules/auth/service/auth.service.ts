@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginUserDto } from '../controller/dto/login-user.dto';
 import { EncryptService } from '../../common/service/encrypt.service';
 import {
-  InvalidCredentialsError,
+  UserInvalidCredentialsError,
   UserAlreadyExistsError,
 } from './auth.service.error';
 import { IRegisterUserOutput } from './interface/register-user.output.interface';
@@ -51,7 +51,7 @@ export class AuthService {
     const storedUser = await this.userService.getByEmail(loginUserDto.email);
 
     if (!storedUser) {
-      throw new InvalidCredentialsError();
+      throw new UserInvalidCredentialsError();
     }
 
     const isPasswordValid = await this.encryptService.compare(
@@ -69,7 +69,7 @@ export class AuthService {
       return { accessToken };
     }
 
-    throw new InvalidCredentialsError();
+    throw new UserInvalidCredentialsError();
   }
 
   private generateAccessToken(

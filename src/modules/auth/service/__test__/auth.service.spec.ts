@@ -6,7 +6,7 @@ import { EncryptService } from '../../../common/service/encrypt.service';
 import { RegisterUserDto } from '../../controller/dto/register-user.dto';
 import { UserEntity } from '../../../user/repository/user.entity';
 import {
-  InvalidCredentialsError,
+  UserInvalidCredentialsError,
   UserAlreadyExistsError,
 } from '../auth.service.error';
 import { LoginUserDto } from '../../controller/dto/login-user.dto';
@@ -142,7 +142,7 @@ describe('AuthService', () => {
       try {
         await authService.login(loginUserDto);
       } catch (err) {
-        expect(err).toBeInstanceOf(InvalidCredentialsError);
+        expect(err).toBeInstanceOf(UserInvalidCredentialsError);
         expect(encryptService.compare).toHaveBeenCalledTimes(0);
       }
     });
@@ -161,7 +161,7 @@ describe('AuthService', () => {
       try {
         await authService.login(loginUserDto);
       } catch (err) {
-        expect(err).toBeInstanceOf(InvalidCredentialsError);
+        expect(err).toBeInstanceOf(UserInvalidCredentialsError);
       }
     });
   });
