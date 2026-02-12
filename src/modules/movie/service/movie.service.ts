@@ -4,12 +4,18 @@ import { UpdateMovieDto } from '../controller/dto/update-movie.dto';
 import { MovieEntity } from '../repository/movie.entity';
 import { IMovieRepository } from '../repository/interface/movie.repository.interface';
 import { MovieNotFoundError } from './movie.service.error';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
+import { ICreateMovieInput } from '../repository/interface/create-movie.input.interface';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MovieService {
   constructor(
     @Inject('MOVIE_REPOSITORY')
     private readonly movieRepository: IMovieRepository,
+    private readonly httpService: HttpService,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(movie: CreateMovieDto): Promise<MovieEntity> {
@@ -56,6 +62,29 @@ export class MovieService {
   }
 
   async syncMovies(): Promise<void> {
-    return this.movieRepository.syncMovies();
+    const starWarsApi = this.configService.get<string>('star.wars.api');
+
+    const fetch = this.httpService.get(starWarsApi);
+
+    const {
+      data: { result: films },
+    } = await lastValueFrom(fetch);
+
+    for (const film of films) {
+      const { title, release_date, director, opening_crawl } = film.properties;
+
+      const newMovie: ICreateMovieInput = {
+        title,
+        director,
+        releaseDate: new Date(release_date),
+        openingCrawl: opening_crawl,
+      };
+
+      const existingMovie = await this.movieRepository.findByTitle(title);
+
+      if (!existingMovie) {
+        await this.movieRepository.create(newMovie);
+      }
+    }
   }
 }
