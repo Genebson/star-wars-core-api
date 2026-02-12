@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseFilters } from '@nestjs/common';
+import { Controller, Post, Body, UseFilters, HttpCode } from '@nestjs/common';
 import {
   ApiBody,
   ApiCreatedResponse,
@@ -30,6 +30,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @HttpCode(200)
   @ApiBody({ type: LoginUserDto, required: true })
   @ApiOkResponse({
     type: AuthResponseDto,
