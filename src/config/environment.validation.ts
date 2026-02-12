@@ -9,4 +9,5 @@ export const environmentValidation = joi.object({
   DB_PASSWORD: joi.string().required(),
   DB_NAME: joi.string().required(),
   JWT_SECRET: joi.string().required(),
+  STAR_WARS_API: joi.string().required(),
 });

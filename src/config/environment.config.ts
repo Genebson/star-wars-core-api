@@ -12,4 +12,7 @@ export const environmentConfig = () => ({
   jwt: {
     secret: process.env.JWT_SECRET,
   },
+  api: {
+    starWars: process.env.STAR_WARS_API,
+  },
 });
