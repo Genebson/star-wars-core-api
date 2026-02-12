@@ -1,11 +1,15 @@
-import { Controller, Post, Body, HttpCode, UseFilters } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { Controller, Post, Body, UseFilters } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from '../service/auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { IRegisterUserOutput } from '../service/interface/register-user.output.interface';
-import { ILoginUserOutput } from '../service/interface/login-user.output.interface';
 import { AuthErrorFilter } from '../service/auth-error-filter.interceptor';
+import { AuthResponseDto } from './dto/auth-response.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -15,16 +19,23 @@ export class AuthController {
 
   @Post('register')
   @ApiBody({ type: RegisterUserDto, required: true })
+  @ApiCreatedResponse({
+    type: AuthResponseDto,
+    description: 'User successfully registered',
+  })
   async register(
     @Body() registerUserDto: RegisterUserDto,
-  ): Promise<IRegisterUserOutput> {
+  ): Promise<AuthResponseDto> {
     return await this.authService.register(registerUserDto);
   }
 
   @Post('login')
   @ApiBody({ type: LoginUserDto, required: true })
-  @HttpCode(200)
-  async login(@Body() loginUserDto: LoginUserDto): Promise<ILoginUserOutput> {
+  @ApiOkResponse({
+    type: AuthResponseDto,
+    description: 'User successfully logged in',
+  })
+  async login(@Body() loginUserDto: LoginUserDto): Promise<AuthResponseDto> {
     return await this.authService.login(loginUserDto);
   }
 }

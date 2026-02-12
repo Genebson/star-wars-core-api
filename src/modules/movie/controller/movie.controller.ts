@@ -13,11 +13,17 @@ import { AuthGuard } from '@nestjs/passport';
 import { MovieService } from '../service/movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { MovieEntity } from '../repository/movie.entity';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RolesGuard } from '../../common/controller/roles/roles.guard';
 import { RolesType } from '../../common/controller/roles/enum/roles.enum';
 import { MovieErrorFilter } from '../service/movie-error-filter.interceptor';
+import { MovieResponseDto } from './dto/create-movie.response.dto';
 
 @ApiTags('Movies')
 @Controller('movie')
@@ -30,27 +36,39 @@ export class MovieController {
   @Post()
   @UseGuards(RolesGuard([RolesType.ADMIN]))
   @ApiBody({ type: CreateMovieDto })
-  async create(@Body() movie: CreateMovieDto): Promise<MovieEntity> {
+  @ApiCreatedResponse({
+    type: MovieResponseDto,
+    description: 'Movie successfully created',
+  })
+  async create(@Body() movie: CreateMovieDto): Promise<MovieResponseDto> {
     return await this.movieService.create(movie);
   }
 
   @Get()
-  async findAll(): Promise<MovieEntity[]> {
+  @ApiOkResponse({
+    type: MovieResponseDto,
+  })
+  async findAll(): Promise<MovieResponseDto[]> {
     return await this.movieService.findAll();
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<MovieEntity> {
+  @ApiOkResponse({ type: MovieResponseDto })
+  async findById(@Param('id') id: string): Promise<MovieResponseDto> {
     return await this.movieService.findByIdOrThrow(+id);
   }
 
   @Patch(':id')
   @UseGuards(RolesGuard([RolesType.ADMIN]))
   @ApiBody({ type: UpdateMovieDto })
+  @ApiOkResponse({
+    type: MovieResponseDto,
+    description: 'Movie successfully updated',
+  })
   async updateById(
     @Param('id') id: string,
     @Body() movie: UpdateMovieDto,
-  ): Promise<MovieEntity> {
+  ): Promise<MovieResponseDto> {
     return await this.movieService.updateById(+id, movie);
   }
 
