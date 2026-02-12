@@ -6,6 +6,8 @@ import { CreateMovieDto } from '../../controller/dto/create-movie.dto';
 import { MovieEntity } from '../../repository/movie.entity';
 import { MovieNotFoundError } from '../movie.service.error';
 import { UpdateMovieDto } from '../../controller/dto/update-movie.dto';
+import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 
 describe('MovieService', () => {
   let movieService: MovieService;
@@ -23,6 +25,18 @@ describe('MovieService', () => {
             findById: jest.fn(),
             updateById: jest.fn(),
             deleteById: jest.fn(),
+          },
+        },
+        {
+          provide: HttpService,
+          useValue: {
+            get: jest.fn(),
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn(),
           },
         },
       ],

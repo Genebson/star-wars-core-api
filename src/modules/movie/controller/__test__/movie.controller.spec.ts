@@ -60,7 +60,7 @@ describe('MovieController', () => {
             director: createMovieDto.director,
             releaseDate: new Date(createMovieDto.releaseDate).toISOString(),
             openingCrawl: createMovieDto.openingCrawl,
-            updatedAt: null,
+            updatedAt: expect.any(String),
             deletedAt: null,
             id: expect.any(Number),
             createdAt: expect.any(String),
