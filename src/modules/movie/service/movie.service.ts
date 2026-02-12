@@ -62,7 +62,7 @@ export class MovieService {
   }
 
   async syncMovies(): Promise<void> {
-    const starWarsApi = this.configService.get<string>('star.wars.api');
+    const starWarsApi = this.configService.get<string>('api.starWars');
 
     const fetch = this.httpService.get(starWarsApi);
 
